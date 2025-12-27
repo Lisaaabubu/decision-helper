@@ -1,0 +1,74 @@
+import '../models/question.dart';
+import '../models/training_user.dart';
+import 'dart:math';
+
+class RecommenderService {
+  /// Schritt 1: Nutzerantworten → Zahlenvektor
+  List<int> vectorizeAnswers(
+    Map<String, String> answers,
+    List<Question> questions,
+  ) {
+    return questions.map((q) {
+      final answer = answers[q.id];
+      if (answer == null) return 0;
+      return q.options.indexOf(answer);
+    }).toList();
+  }
+
+  /// Schritt 2: Cosine Similarity
+  double cosineSimilarity(List<int> a, List<int> b) {
+    double dot = 0;
+    double magA = 0;
+    double magB = 0;
+
+    for (int i = 0; i < a.length; i++) {
+      dot += a[i] * b[i];
+      magA += a[i] * a[i];
+      magB += b[i] * b[i];
+    }
+
+    if (magA == 0 || magB == 0) return 0.0; // Schutz gegen Division durch 0
+    return dot / (sqrt(magA) * sqrt(magB));
+  }
+
+
+  /// Schritt 3: KNN – ähnlichste Nutzer finden
+  List<TrainingUser> findNearestNeighbours({
+    required Map<String, String> currentAnswers,
+    required List<TrainingUser> trainingUsers,
+    required List<Question> questions,
+    int k = 3,
+  }) {
+    final currentVector = vectorizeAnswers(currentAnswers, questions);
+
+    final scored = trainingUsers.map((user) {
+      final vector = vectorizeAnswers(user.answers, questions);
+      final similarity = cosineSimilarity(currentVector, vector);
+      return MapEntry(user, similarity);
+    }).toList();
+
+    scored.sort((a, b) => b.value.compareTo(a.value));
+    return scored.take(k).map((e) => e.key).toList();
+  }
+
+  /// Schritt 4: Empfehlung pro Frage
+  Map<String, Map<String, int>> calculateFrequencies(
+    List<TrainingUser> neighbours,
+    List<Question> questions,
+  ) {
+    final result = <String, Map<String, int>>{};
+
+    for (final q in questions) {
+      final counts = <String, int>{};
+      for (final u in neighbours) {
+        final answer = u.answers[q.id];
+        if (answer != null) {
+          counts[answer] = (counts[answer] ?? 0) + 1;
+        }
+      }
+      result[q.id] = counts;
+    }
+
+    return result;
+  }
+}
