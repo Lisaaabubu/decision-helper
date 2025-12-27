@@ -1,0 +1,34 @@
+[
+  {
+    "userId": 1,
+    "answers": {
+      "Q1": "Laptop",
+      "Q2": "Abends",
+      "Q3": "VS Code"
+    }
+  },
+  {
+    "userId": 2,
+    "answers": {
+      "Q1": "PC",
+      "Q2": "Morgens",
+      "Q3": "IntelliJ"
+    }
+  },
+  {
+    "userId": 3,
+    "answers": {
+      "Q1": "Laptop",
+      "Q2": "Nachmittags",
+      "Q3": "VS Code"
+    }
+  },
+  {
+    "userId": 4,
+    "answers": {
+      "Q1": "Smartphone",
+      "Q2": "Abends",
+      "Q3": "Vim"
+    }
+  }
+]

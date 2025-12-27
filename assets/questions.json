@@ -1,0 +1,17 @@
+[
+  {
+    "id": "Q1",
+    "text": "Welches Gerät verwendest du am häufigsten?",
+    "options": ["PC", "Laptop", "Tablet", "Smartphone"]
+  },
+  {
+    "id": "Q2",
+    "text": "Wann arbeitest du am produktivsten?",
+    "options": ["Morgens", "Nachmittags", "Abends"]
+  },
+  {
+    "id": "Q3",
+    "text": "Welche Entwicklungsumgebung nutzt du?",
+    "options": ["VS Code", "IntelliJ", "Android Studio", "Vim", "Sonstige"]
+  }
+]
