@@ -1,16 +1,26 @@
 [
   {
     "id": "Q1",
+    "text": "Wie viel Erfahrung hast du bereits mit Programmieren?",
+    "options": [
+      "Neu (0–3 Monate)",
+      "Grundlagen (3–12 Monate)",
+      "Fortgeschritten (1–3 Jahre)",
+      "Sehr erfahren (3+ Jahre)"
+    ]
+  },
+  {
+    "id": "Q2",
     "text": "Welches Gerät verwendest du am häufigsten?",
     "options": ["PC", "Laptop", "Tablet", "Smartphone"]
   },
   {
-    "id": "Q2",
+    "id": "Q3",
     "text": "Wann arbeitest du am produktivsten?",
     "options": ["Morgens", "Nachmittags", "Abends"]
   },
   {
-    "id": "Q3",
+    "id": "Q4",
     "text": "Welche Entwicklungsumgebung nutzt du?",
     "options": ["VS Code", "IntelliJ", "Android Studio", "Vim", "Sonstige"]
   }

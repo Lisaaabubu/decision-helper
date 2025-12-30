@@ -2,33 +2,37 @@
   {
     "userId": 1,
     "answers": {
-      "Q1": "Laptop",
-      "Q2": "Abends",
-      "Q3": "VS Code"
+      "Q1": "Grundlagen (3–12 Monate)",
+      "Q2": "Laptop",
+      "Q3": "Abends",
+      "Q4": "VS Code"
     }
   },
   {
     "userId": 2,
     "answers": {
-      "Q1": "PC",
-      "Q2": "Morgens",
-      "Q3": "IntelliJ"
+      "Q1": "Fortgeschritten (1–3 Jahre)",
+      "Q2": "PC",
+      "Q3": "Morgens",
+      "Q4": "IntelliJ"
     }
   },
   {
     "userId": 3,
     "answers": {
-      "Q1": "Laptop",
-      "Q2": "Nachmittags",
-      "Q3": "VS Code"
+      "Q1": "Neu (0–3 Monate)",
+      "Q2": "Laptop",
+      "Q3": "Nachmittags",
+      "Q4": "VS Code"
     }
   },
   {
     "userId": 4,
     "answers": {
-      "Q1": "Smartphone",
-      "Q2": "Abends",
-      "Q3": "Vim"
+      "Q1": "Sehr erfahren (3+ Jahre)",
+      "Q2": "PC",
+      "Q3": "Abends",
+      "Q4": "Vim"
     }
   }
 ]
