@@ -14,23 +14,47 @@ class RecommenderService {
       return q.options.indexOf(answer);
     }).toList();
   }
-
+  List<bool> buildAnsweredMask(
+    Map<String, String> currentAnswers,
+    List<Question> questions,
+  )
+  {
+    return questions.map((q)
+    {
+      return currentAnswers.containsKey(q.id);
+    }).toList();
+  } 
+  
   /// Schritt 2: Cosine Similarity
-  double cosineSimilarity(List<int> a, List<int> b) {
+  double cosineSimilarityMasked(
+    List<int> a,
+    List<int> b,
+    List<bool> mask,
+  )
+  {
     double dot = 0;
     double magA = 0;
     double magB = 0;
 
-    for (int i = 0; i < a.length; i++) {
+    for (int i = 0; i < a.length; i++)
+    {
+      if (!mask[i])
+      {
+        continue;
+      }
+
       dot += a[i] * b[i];
       magA += a[i] * a[i];
       magB += b[i] * b[i];
     }
 
-    if (magA == 0 || magB == 0) return 0.0; // Schutz gegen Division durch 0
+    if (magA == 0 || magB == 0)
+    {
+      return 0.0;
+    }
+
     return dot / (sqrt(magA) * sqrt(magB));
   }
-
 
   /// Schritt 3: KNN – ähnlichste Nutzer finden
   List<TrainingUser> findNearestNeighbours({
@@ -39,13 +63,16 @@ class RecommenderService {
     required List<Question> questions,
     int k = 3,
   }) {
-    final currentVector = vectorizeAnswers(currentAnswers, questions);
+      final currentVector = vectorizeAnswers(currentAnswers, questions);
+      final mask = buildAnsweredMask(currentAnswers, questions);
 
-    final scored = trainingUsers.map((user) {
-      final vector = vectorizeAnswers(user.answers, questions);
-      final similarity = cosineSimilarity(currentVector, vector);
-      return MapEntry(user, similarity);
-    }).toList();
+      final scored = trainingUsers.map((user)
+      {
+        final vector = vectorizeAnswers(user.answers, questions);
+        final similarity = cosineSimilarityMasked(currentVector, vector, mask);
+        return MapEntry(user, similarity);
+      }).toList();
+
 
     scored.sort((a, b) => b.value.compareTo(a.value));
     return scored.take(k).map((e) => e.key).toList();
