@@ -23,8 +23,27 @@ class RecommenderService {
     {
       return currentAnswers.containsKey(q.id);
     }).toList();
-  } 
-  
+  }
+
+
+  int totalVotesForQuestion(
+    String questionId,
+    List<TrainingUser> trainingUsers,
+  )
+  {
+    int total = 0;
+
+    for (final u in trainingUsers)
+    {
+      if (u.answers.containsKey(questionId))
+      {
+        total++;
+      }
+    }
+
+    return total;
+  }
+ 
   /// Schritt 2: Cosine Similarity
   double cosineSimilarityMasked(
     List<int> a,
