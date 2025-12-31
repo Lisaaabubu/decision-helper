@@ -109,7 +109,6 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
     final bool hasWhyOptions = whyOptionsPerQuestion.containsKey(qId);
     final bool showWhyBlock = hasWhyOptions && selected != null;
 
-
     final List<TrainingUser> neighbours = _recommender.findNearestNeighbours(
       currentAnswers: widget.currentAnswers,
       trainingUsers: widget.trainingUsers,
@@ -143,7 +142,6 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
       }
     }
 
-
     String? recommended;
     int topCount = 0;
 
@@ -175,115 +173,117 @@ class _QuestionDetailScreenState extends State<QuestionDetailScreen>
       appBar: AppBar(
         title: Text(q.id),
       ),
+
+      // ✅ FIX: Body ist nur noch scrollbar; Button sitzt fix unten
       body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      q.text,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    const SizedBox(height: 16),
-
-                    ...q.options.map((opt)
-                    {
-                      if (isQ4)
-                      {
-                        final String? iconPath = ideIconByOption[opt];
-
-                        return RadioListTile<String>(
-                          value: opt,
-                          groupValue: selected,
-                          onChanged: (v) => _onSelect(qId, v),
-                          title: Row(
-                            children: [
-                              if (iconPath != null) ...[
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(6),
-                                  child: Image.asset(
-                                    iconPath,
-                                    width: 28,
-                                    height: 28,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                const SizedBox(width: 12),
-                              ],
-                              Text(opt),
-                            ],
-                          ),
-                        );
-                      }
-
-                      return RadioListTile<String>(
-                        title: Text(opt),
-                        value: opt,
-                        groupValue: selected,
-                        onChanged: (v) => _onSelect(qId, v),
-                      );
-                    }).toList(),
-
-                    if (showHelperCard) ...[
-                      const SizedBox(height: 12),
-                      _DecisionHelperCard(
-                        k: widget.k,
-                        votesTotal: votesTotal,
-                        neighbours: neighbours,
-                        label: mainLabel,
-                        value: mainValue,
-                        confidence: confidence,
-                        counts: counts,
-                        overallCounts: overallCounts,
-                      ),
-                    ],
-
-                    if (showWhyBlock) ...[
-                      const SizedBox(height: 16),
-                      _WhyCard(
-                        title: 'Warum hast du dich dafür entschieden?',
-                        reasons: whyOptionsPerQuestion[qId]!,
-                        selectedWhy: selectedWhy,
-                        onChanged: (v)
-                        {
-                          setState(()
-                          {
-                            selectedWhy = v;
-                          });
-                        },
-                      ),
-                    ],
-                  ],
-                ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                q.text,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
-            ),
+              const SizedBox(height: 16),
 
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: selected == null
-                      ? null
-                      : ()
-                      {
-                          Navigator.pop(
-                            context,
-                            QuestionAnswerResult(
-                              answer: selected!,
-                              why: selectedWhy,
+              ...q.options.map((opt)
+              {
+                if (isQ4)
+                {
+                  final String? iconPath = ideIconByOption[opt];
+
+                  return RadioListTile<String>(
+                    value: opt,
+                    groupValue: selected,
+                    onChanged: (v) => _onSelect(qId, v),
+                    title: Row(
+                      children: [
+                        if (iconPath != null) ...[
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(6),
+                            child: Image.asset(
+                              iconPath,
+                              width: 28,
+                              height: 28,
+                              fit: BoxFit.contain,
                             ),
-                          );
-                        },
-                  child: const Text('Speichern'),
+                          ),
+                          const SizedBox(width: 12),
+                        ],
+                        Text(opt),
+                      ],
+                    ),
+                  );
+                }
+
+                return RadioListTile<String>(
+                  title: Text(opt),
+                  value: opt,
+                  groupValue: selected,
+                  onChanged: (v) => _onSelect(qId, v),
+                );
+              }).toList(),
+
+              if (showHelperCard) ...[
+                const SizedBox(height: 12),
+                _DecisionHelperCard(
+                  k: widget.k,
+                  votesTotal: votesTotal,
+                  neighbours: neighbours,
+                  label: mainLabel,
+                  value: mainValue,
+                  confidence: confidence,
+                  counts: counts,
+                  overallCounts: overallCounts,
                 ),
-              ),
+              ],
+
+              if (showWhyBlock) ...[
+                const SizedBox(height: 16),
+                _WhyCard(
+                  title: 'Warum hast du dich dafür entschieden?',
+                  reasons: whyOptionsPerQuestion[qId]!,
+                  selectedWhy: selectedWhy,
+                  onChanged: (v)
+                  {
+                    setState(()
+                    {
+                      selectedWhy = v;
+                    });
+                  },
+                ),
+              ],
+
+              // ✅ Damit der letzte Inhalt nicht unter dem Bottom-Button „verschwindet“
+              const SizedBox(height: 12),
+            ],
+          ),
+        ),
+      ),
+
+      // ✅ FIX: Button fix unten, unabhängig von Scroll
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: selected == null
+                  ? null
+                  : ()
+                  {
+                      Navigator.pop(
+                        context,
+                        QuestionAnswerResult(
+                          answer: selected!,
+                          why: selectedWhy,
+                        ),
+                      );
+                    },
+              child: const Text('Speichern'),
             ),
-          ],
+          ),
         ),
       ),
     );
